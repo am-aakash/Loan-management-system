@@ -1,7 +1,7 @@
 exports.responseHelper = (res, status, data, message) => {
-  const resStatus = status ? "success" : "fail";
+  const resStatus = status ? 200 : 400;
   const validRes = {
-    status: resStatus,
+    status_code: resStatus,
     data,
     message,
   };

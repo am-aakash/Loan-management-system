@@ -7,6 +7,9 @@ app.use(bodyParser.json());
 const auth = require("./routes/auth.routes");
 app.use("/auth", auth);
 
+const loanRoute = require("./routes/loan.routes");
+app.use("/api", loanRoute);
+
 // home route
 app.use("/", (req, res) => {
   res.send("Loan Management API working");
