@@ -16,7 +16,10 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
 const db = {};
 db.sequelize = sequelize;
 
-// User table
+// Admin table
 db.admin = require("./admin/admin.model")(sequelize, Sequelize);
+
+// User table
+db.user = require("./loan/user.model")(sequelize, Sequelize);
 
 module.exports = db;
