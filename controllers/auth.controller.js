@@ -1,19 +1,16 @@
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const config = require("../config/auth.config");
-const { v4: uuidv4 } = require("uuid");
-const CONFIG = require("../config/config");
 const response = require("../helpers/response.helper");
 const db = require("../models");
 const Admin = db.admin;
 
-generateLoginData = (user) => {
+generateLoginData = (admin) => {
   const token = jwt.sign(
     {
-      id: user.id,
-      name: user.name,
-      phone: user.phone,
+      id: admin.id,
+      name: admin.name,
+      phone: admin.phone,
     },
     config.secret,
     {
@@ -167,7 +164,7 @@ exports.getAdmins = async (req, res) => {
       res,
       false,
       "Something went wrong",
-      "Login failed"
+      "Request failed"
     );
   }
 };
