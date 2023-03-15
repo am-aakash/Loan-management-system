@@ -24,6 +24,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
+        credit_score: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
     });
 
     return User;

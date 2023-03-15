@@ -1,13 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
 const response = require("../../helpers/response.helper");
 const db = require("../../models");
+const getCreditScore = require("./loan_utils/credit_score")
 const User = db.user;
-
-getCreditScore = (user) => {
-    var data = 600;
-    return data;
-};
-
 
 exports.registerUser = async (req, res) => {
     const aadhar_id = req.body.aadhar_id;
@@ -47,20 +42,19 @@ exports.registerUser = async (req, res) => {
                 "Failed to Register User"
             );
         } else {
+            let credit_score = getCreditScore(aadhar_id);
             let user = await User.create({
                 aadhar_id,
                 name,
                 email,
                 annual_income,
+                credit_score,
             });
             if (user) {
                 return response.responseHelper(
                     res,
                     true,
-                    {
-                        user: user,
-                        credit_score: 500,
-                    },
+                    user,
                     "Register user successful"
                 );
             }
