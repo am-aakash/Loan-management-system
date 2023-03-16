@@ -3,6 +3,7 @@ const db = require("../../models");
 const emi_calculator = require("./loan_utils/emi_calculator")
 const Loan = db.loan;
 const User = db.user;
+const Emi = db.emi;
 
 exports.applyLoan = async (req, res) => {
     const user_id = req.body.user_id;
@@ -97,13 +98,28 @@ exports.applyLoan = async (req, res) => {
             disbursement_date
         })
 
-        emi_calculator.emiCalculator(loan.id, loan_amount, term_period_months, interest_rate / 12, user.annual_income / 12, 1);
+        let emiList = emi_calculator.emiCalculator(loan.id, loan_amount, term_period_months, interest_rate / 12, user.annual_income / 12, 1);
+        
+        await Emi.destroy({
+            where: { loan_id: loan.id }
+        });
 
-        emis = await db.emi.findAll({
+        for(let arr of emiList){
+            let amt = arr.current_amount;
+            if(arr.amount != null) amt = arr.amount;
+            await Emi.create({
+                loan_id: loan.id,
+                emi_amount: amt,
+                month_of_emi: arr.current_month,
+                paid: false
+            });
+        }
+        let emis = await db.emi.findAll({
             where: {
                 loan_id: loan.id,
             },
         })
+        
         if (loan) {
             return response.responseHelper(
                 res,
