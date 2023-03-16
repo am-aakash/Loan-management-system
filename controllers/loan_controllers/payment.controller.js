@@ -129,12 +129,10 @@ exports.makePayment = async (req, res) => {
         });
 
         for(let arr of emiList){
-            let amt = arr.current_amount;
-            if(arr.amount != null) amt = arr.amount;
             await Emi.create({
                 loan_id: loan.id,
-                emi_amount: amt,
-                month_of_emi: arr.current_month,
+                emi_amount: arr.amount,
+                month_of_emi: arr.month,
                 paid: false
             });
         }
