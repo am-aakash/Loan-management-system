@@ -6,10 +6,10 @@ const Emi = db.emi;
 
 exports.getStatement = async (req, res) => {
     const loan_id = req.query.loan_id;
-    
+
     if (
         loan_id == null ||
-        loan_id === "" 
+        loan_id === ""
     ) {
         return response.responseHelper(
             res,
@@ -25,7 +25,7 @@ exports.getStatement = async (req, res) => {
                 id: loan_id,
             },
         });
-        if(!loan){
+        if (!loan) {
             return response.responseHelper(
                 res,
                 false,
@@ -33,7 +33,7 @@ exports.getStatement = async (req, res) => {
                 "Failed to Get Statement"
             );
         }
-        
+
         let past_transactions = await Transaction.findAll({
             where: {
                 loan_id: loan_id,
@@ -50,13 +50,32 @@ exports.getStatement = async (req, res) => {
         // Get list of EMIs due before the current month
 
         if (past_transactions || emis) {
+            let transaction_list = [];
+            for (let transaction of past_transactions) {
+                let tempObj = {
+                    "date": transaction.createdAt.toDateString(),
+                    "amount_paid": transaction.transaction_amount,
+                    "emi_month": transaction.month_of_transaction
+                }
+                transaction_list.push(tempObj);
+            }
+            let month = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            let emi_list = [];
+            for (let emi of emis) {
+                let tempObj = {
+                    "amount": emi.emi_amount,
+                    "emi_month": emi.month_of_emi,
+                }
+                emi_list.push(tempObj);
+            }
             return response.responseHelper(
                 res,
                 true,
                 {
                     loan,
-                    past_transactions,
-                    emis,
+                    transaction_list,
+                    emi_list,
                 },
                 "Statement recieved"
             );

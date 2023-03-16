@@ -149,7 +149,7 @@ exports.makePayment = async (req, res) => {
                 {
                     payment,
                     loan,
-                    emis,
+                    emiList,
                 },
                 "Payment made successfully"
             );
