@@ -9,4 +9,7 @@ const statement_controller = require("../controllers/loan_controllers/statement.
 router.post("/register-user", user_controller.registerUser);
 router.get("/get-users", user_controller.getUsers);
 
+router.post("/apply-loan", loan_controller.applyLoan);
+router.get("/get-loans", loan_controller.getLoans);
+
 module.exports = router;

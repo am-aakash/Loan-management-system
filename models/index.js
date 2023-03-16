@@ -22,4 +22,22 @@ db.admin = require("./admin/admin.model")(sequelize, Sequelize);
 // User table
 db.user = require("./loan/user.model")(sequelize, Sequelize);
 
+// Loan Table
+db.loan = require("./loan/loan.model")(sequelize, Sequelize);
+db.loan.belongsTo(db.user, {
+  foreignKey: 'user_id'
+})
+
+// emi table
+db.emi = require("./loan/emi.model")(sequelize, Sequelize);
+db.emi.belongsTo(db.loan, {
+  foreignKey: 'loan_id'
+})
+
+// transaction table
+db.transaction = require("./loan/transactions.model")(sequelize, Sequelize);
+db.transaction.belongsTo(db.loan, {
+  foreignKey: 'loan_id'
+})
+
 module.exports = db;
