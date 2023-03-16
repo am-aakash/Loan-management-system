@@ -27,34 +27,32 @@ async function getTransactions() {
 // Call the function to get the transactions array
 getTransactions().then((transactions) => {
   transactionList = transactions;
-  console.log(transactionList);
 });
 
 getCreditScore = (aadhar_id) => {
-  const userTransactions = transactionList.filter(transaction => transaction.user === aadhar_id);
-  
   // calculate total account balance
-  let accountBalance = 0;
-  userTransactions.forEach(transaction => {
-    if (transaction.transaction_type === 'CREDIT') {
-      accountBalance += transaction.amount;
-    } else if (transaction.transaction_type === 'DEBIT') {
-      accountBalance -= transaction.amount;
+  var balanceDifference = Number(0);
+
+  for(let transaction of transactionList){
+    if(transaction.user == aadhar_id){
+      if (transaction.transaction_type === "CREDIT") {
+        balanceDifference = Number(balanceDifference) + Number(transaction.amount);
+      } else if (transaction.transaction_type === "DEBIT") {
+        balanceDifference = Number(balanceDifference) - Number(transaction.amount);
+      }
     }
-  });
+  }  
   
   // calculate credit score
   let creditScore;
-  if (accountBalance >= 1000000) {
+  if (balanceDifference >= 1000000) {
     creditScore = 900;
-  } else if (accountBalance <= 100000) {
+  } else if (balanceDifference <= 100000) {
     creditScore = 300;
   } else {
-    const balanceDifference = accountBalance - 100000;
-    const creditScoreChange = Math.floor(balanceDifference / 15000) * 10;
+    const creditScoreChange = Math.floor(balanceDifference / Number(15000)) * 10;
     creditScore = 300 + creditScoreChange;
   }
-  
   return creditScore;
 };
 
