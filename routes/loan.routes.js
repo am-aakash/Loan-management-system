@@ -12,4 +12,8 @@ router.get("/get-users", user_controller.getUsers);
 router.post("/apply-loan", loan_controller.applyLoan);
 router.get("/get-loans", loan_controller.getLoans);
 
+router.post("/make-payment", payment_controller.makePayment);
+
+router.get("/get-statement", statement_controller.getStatement);
+
 module.exports = router;
